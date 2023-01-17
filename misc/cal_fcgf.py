@@ -353,9 +353,9 @@ if __name__ == '__main__':
     checkpoint = torch.load("misc/ResUNetBN2C-feat32-3dmatch-v0.05.pth")
     model.load_state_dict(checkpoint['state_dict'])
     model.eval()
-    # process_3dmatch(voxel_size=0.05)
+    process_3dmatch(voxel_size=0.05)
     # process_3dmatch_test(voxel_size=0.05)
-    process_redwood(voxel_size=0.05)
+    # process_redwood(voxel_size=0.05)
 
     # model = FCGF(
     #     1,

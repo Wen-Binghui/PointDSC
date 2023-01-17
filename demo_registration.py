@@ -60,8 +60,8 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--chosen_snapshot', default='PointDSC_3DMatch_release', type=str, help='snapshot dir')
-    parser.add_argument('--pcd1', default='demo_data/cloud_bin_0.ply', type=str)
-    parser.add_argument('--pcd2', default='demo_data/cloud_bin_1.ply', type=str)
+    parser.add_argument('--pcd1', default="/home/wbh/datasets/3DMatch/fragments/7-scenes-redkitchen/cloud_bin_0.ply", type=str)
+    parser.add_argument('--pcd2', default="/home/wbh/datasets/3DMatch/fragments/7-scenes-redkitchen/cloud_bin_10.ply", type=str)
     parser.add_argument('--descriptor', default='fcgf', type=str, choices=['fcgf', 'fpfh'])
     parser.add_argument('--use_gpu', default=True, type=str2bool)
     args = parser.parse_args()
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     if args.descriptor == 'fpfh':
         raw_src_pcd, src_pts, src_features = extract_fpfh_features(args.pcd1, config.downsample, device)
         raw_tgt_pcd, tgt_pts, tgt_features = extract_fpfh_features(args.pcd2, config.downsample, device)
-    else:
+    else: # fcgf 沒有放縮
         raw_src_pcd, src_pts, src_features = extract_fcgf_features(args.pcd1, config.downsample, device)
         raw_tgt_pcd, tgt_pts, tgt_features = extract_fcgf_features(args.pcd2, config.downsample, device)
 
@@ -116,8 +116,10 @@ if __name__ == '__main__':
             }
     res = model(data)
 
-   # First plot the original state of the point clouds
+    # First plot the original state of the point clouds
     draw_registration_result(raw_src_pcd, raw_tgt_pcd, np.identity(4))
 
     # Plot point clouds after registration
-    draw_registration_result(raw_src_pcd, raw_tgt_pcd, res['final_trans'][0].detach().cpu().numpy())
+    trans = res['final_trans'][0].detach().cpu().numpy()
+    print(np.linalg.inv(trans))
+    draw_registration_result(raw_src_pcd, raw_tgt_pcd, trans)
