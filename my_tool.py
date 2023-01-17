@@ -191,7 +191,9 @@ if __name__ == '__main__':
                 cv_file.write("transform", gt_)
                 # draw_registration_result(tgt_kp_o3d, src_kp_o3d, gt_)
 
-
+            if i>2:
+                break
+            
 
 
     
